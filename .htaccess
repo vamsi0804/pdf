@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Prevent direct access to sensitive directories
+    RewriteRule ^(backend/config|backend/src|backend/database) - [F,L]
+
+    # If backend/public exists, route to backend/public/
+    RewriteCond %{REQUEST_URI} !^/backend/public/
+    RewriteRule ^(.*)$ backend/public/$1 [L]
+</IfModule>

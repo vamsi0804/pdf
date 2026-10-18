@@ -1,0 +1,91 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #160D06;
+    color: #FFF5D0;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+}
+
+/* Custom Scrollbar for Traditional Aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #231105;
+}
+::-webkit-scrollbar-thumb {
+  background: #75451F;
+  border-radius: 3px;
+  border: 1px solid #3A1E0B;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A66A32;
+}
+
+/* Authentic Wooden Signboard CSS Components */
+.wood-signboard {
+  background: linear-gradient(180deg, #8B5424 0%, #633714 50%, #46250B 100%);
+  border: 3px solid #2B150A;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7), inset 0 1px 2px rgba(255, 235, 175, 0.4), inset 0 -2px 3px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.wood-signboard::before, .wood-signboard::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  background: #2D1405;
+  border: 1px solid #140902;
+  border-radius: 1px;
+}
+
+.wood-signboard::before {
+  top: -8px;
+  left: 12px;
+}
+
+.wood-signboard::after {
+  top: -8px;
+  right: 12px;
+}
+
+/* Wood plank button */
+.wood-plank {
+  background: linear-gradient(180deg, #6C3D18 0%, #4F290D 100%);
+  border: 2px solid #2B150A;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 240, 190, 0.25);
+  transition: all 0.15s ease-in-out;
+}
+.wood-plank:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.wood-plank:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Wood subtopic button */
+.wood-subtopic {
+  background: linear-gradient(180deg, #7C471D 0%, #542D11 50%, #3F1F0A 100%);
+  border: 2px solid #241105;
+  border-radius: 4px 16px 16px 4px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 235, 175, 0.3);
+  position: relative;
+}
+
+/* Turquoise Rivet */
+.turquoise-rivet {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #7BE1F5 0%, #168FA8 55%, #0B4B5A 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.7), inset 0 0 2px rgba(255, 255, 255, 0.6);
+  border: 1px solid #062830;
+}

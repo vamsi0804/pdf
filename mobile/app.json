@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "సాంప్రదాయిక జ్ఞాన దర్శిని",
+    "slug": "telugu-knowledge-pdf-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2B150A"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.clickzen.teluguknowledge"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2B150A"
+      },
+      "package": "com.clickzen.teluguknowledge"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-asset"
+    ]
+  }
+}
