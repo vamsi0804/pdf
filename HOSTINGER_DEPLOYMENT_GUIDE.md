@@ -1,161 +1,168 @@
 # హోస్టింగర్ (Hostinger) డిప్లాయ్‌మెంట్ మార్గదర్శిని
-## Traditional Telugu Knowledge & PDF Reader Platform
+## 2 డొమైన్‌లు (Develop & Prod) + 2 డేటాబేస్‌లు (No Node.js)
 
-ఈ ప్రాజెక్ట్ **Shared Hosting (Hostinger cPanel/hPanel)** లో **Node.js అవసరం లేకుండా (Without Node.js)** పూర్తిగా PHP మరియు MySQL లతో నడపడానికి సిద్ధంగా రూపొందించబడింది.
-
----
-
-## 1. సిస్టమ్ నిర్మాణం (Architecture Overview)
-
-```
-Hostinger public_html/
-├── .htaccess                 (రూట్ డైరెక్టరీ రీరైట్ & భద్రతా నియమాలు)
-├── index.php                 (రూట్ ఫార్వార్డర్)
-├── backend/
-│   ├── config/
-│   │   ├── config.php        (MySQL డేటాబేస్ & అప్లికేషన్ కాన్ఫిగరేషన్)
-│   │   └── Database.php      (PDO MySQL కనెక్షన్)
-│   ├── database/
-│   │   └── single_database_install.sql (ఒకే ఒక్క క్లిక్‌తో ఇన్‌స్టాల్ అయ్యే MySQL ఫైల్)
-│   ├── public/
-│   │   ├── admin/            (స్టాటిక్ రియాక్ట్ అడ్మిన్ ప్యానెల్ - నోడ్ అవసరం లేదు)
-│   │   ├── js/
-│   │   │   ├── pdf.min.js    (ఆఫ్‌లైన్ పి.డి.ఎఫ్ రెండరర్)
-│   │   │   └── pdf.worker.min.js
-│   │   ├── viewer.php        (నేరుగా బ్రౌజర్‌లో పి.డి.ఎఫ్ వీక్షించే స్వతంత్ర పేజీ)
-│   │   └── index.php         (PHP రౌటర్ & REST API)
-│   └── storage/
-│       ├── pdfs/             (అన్ని 59 ఒరిజినల్ వేద పి.డి.ఎఫ్ దస్త్రాలు)
-│       └── uploads/          (సంప్రదాయ నేపథ్య చిత్రాలు)
-```
+ఈ ప్రాజెక్ట్ **Hostinger Shared Hosting** లో **Node.js లేకుండా** 2 వేర్వేరు డొమైన్‌లు (స్టేజింగ్ & ప్రొడక్షన్) మరియు 2 వేర్వేరు డేటాబేస్‌లతో నడవడానికి సిద్ధం చేయబడింది.
 
 ---
 
-## 2. గిట్‌హబ్ (GitHub) సెటప్ - develop మరియు prod బ్రాంచ్‌లు
+## 1. సిస్టమ్ నిర్మాణం (2 డొమైన్లు & 2 డేటాబేస్ విధానం)
 
-మీ స్థానిక కంప్యూటర్‌లో `develop` మరియు `prod` బ్రాంచ్‌లు ఇప్పటికే రూపొందించబడ్డాయి.
-
-### Step 2.1: గిట్‌హబ్‌లో రిపోజిటరీ సృష్టించడం
-1. [GitHub.com](https://github.com) లోకి లాగిన్ అవ్వండి.
-2. నూతన రిపోజిటరీని సృష్టించండి (ఉదాహరణకు: `telugu-pdf-app`). **Initialize with README ను అన్‌చెక్ చేయండి**.
-
-### Step 2.2: కోడ్‌ను గిట్‌హబ్‌కు పుష్ చేయడం
-మీ టెర్మినల్ లేదా పవర్‌షెల్‌లో క్రింది ఆదేశాలను అమలు చేయండి:
-
-```bash
-# 1. రిమోట్ రిపోజిటరీని జోడించండి (మీ యూజర్‌నేమ్ మార్చుకోండి):
-git remote add origin https://github.com/<YOUR_GITHUB_USERNAME>/telugu-pdf-app.git
-
-# 2. develop బ్రాంచ్‌ను పుష్ చేయండి:
-git push -u origin develop
-
-# 3. prod బ్రాంచ్‌ను పుష్ చేయండి:
-git push -u origin prod
-```
+| విభాగం | Develop / Staging | Production (Live) |
+|---|---|---|
+| **డొమైన్** | `dev.yourdomain.com` (లేదా సబ్‌డొమైన్) | `yourdomain.com` (ప్రధాన డొమైన్) |
+| **గిట్ బ్రాంచ్** | `develop` | `prod` |
+| **డేటాబేస్** | `u123456789_dev_db` | `u123456789_prod_db` |
+| **హోస్టింగర్ పాత్** | `public_html/dev` (లేదా సబ్‌డొమైన్ ఫోల్డర్) | `public_html` |
+| **అడ్మిన్ డాష్‌బోర్డ్** | `https://dev.yourdomain.com/admin/` | `https://yourdomain.com/admin/` |
 
 ---
 
-## 3. హోస్టింగర్ సింగిల్ డేటాబేస్ (MySQL) సెటప్
+## 2. హోస్టింగర్‌లో ఏ ఫైల్స్ డిప్లాయ్ అవుతాయి? (Which files are deployed?)
 
-మేము తయారుచేసిన `single_database_install.sql` ఫైల్ ద్వారా 6 టేబుళ్లు, 3 విభాగాలు, 15 అధ్యాయాలు, 59 అనువాకాలు మరియు డిఫాల్ట్ అడ్మిన్ అకౌంట్ ఒక్క క్లిక్‌తో ఇన్‌స్టాల్ అవుతాయి.
+హోస్టింగర్ అనేది వెబ్ సర్వర్ (Apache + PHP). అందువల్ల హోస్టింగర్ రన్ చేయడానికి క్రింది ఫైల్స్ మాత్రమే అవసరం:
 
-1. **హోస్టింగర్ hPanel** లోకి లాగిన్ అవ్వండి.
-2. **Databases** -> **MySQL Databases** విభాగంలోకి వెళ్లండి.
-3. నూతన డేటాబేస్‌ను సృష్టించండి:
-   - **Database Name**: ఉదా: `u123456789_telugu`
-   - **Username**: ఉదా: `u123456789_admin`
-   - **Password**: మీ పాస్‌వర్డ్
-4. డేటాబేస్ ప్రక్కన ఉన్న **Enter phpMyAdmin** బటన్‌ను క్లిక్ చేయండి.
-5. పైన ఉన్న **Import** ట్యాబ్‌ను ఎంచుకోండి.
-6. **Choose File** క్లిక్ చేసి `backend/database/single_database_install.sql` ను ఎంచుకోండి.
-7. పేజీ దిగువన ఉన్న **Go** లేదా **Import** క్లిక్ చేయండి.
+### ✅ హోస్టింగర్‌లో రన్ అయ్యే ప్రధాన ఫైల్స్:
+1. **`index.php` & `.htaccess`** (ప్రాజెక్ట్ రూట్ లోనివి): అన్ని రిక్వెస్ట్‌లను బ్యాకెండ్‌కు సురక్షితంగా మళ్ళిస్తాయి.
+2. **`backend/` ఫోల్డర్**:
+   - `config/config.php`: డేటాబేస్ కనెక్షన్ వివరాలు (డొమైన్ ఆధారంగా ఆటో-స్విచ్ అవుతుంది).
+   - `src/`: PHP API కంట్రోలర్లు & మోడల్స్ (వర్గం, అధ్యాయం, సబ్‌టాపిక్, అడ్మిన్ లాగిన్).
+   - `public/admin/`: **ఇప్పటికే సిద్ధం చేయబడిన రియాక్ట్ అడ్మిన్ ప్యానెల్** (HTML, CSS, JS - నోడ్ అవసరం లేదు).
+   - `public/js/`: ఆఫ్‌లైన్ `pdf.min.js` & `pdf.worker.min.js`.
+   - `public/viewer.php`: పి.డి.ఎఫ్ వీక్షించే స్వతంత్ర పేజీ.
+   - `storage/pdfs/`: అన్ని 59 వేద పి.డి.ఎఫ్ పత్రాలు.
+   - `storage/uploads/`: భగవంతుని దివ్య నేపథ్య చిత్రాలు.
 
-> **డిఫాల్ట్ అడ్మిన్ లాగిన్ వివరాలు:**
-> - ఈమెయిల్: `admin@vedicknowledge.org`
-> - పాస్‌వర్డ్: `admin123`
-
----
-
-## 4. హోస్టింగర్ గిట్ డిప్లాయ్‌మెంట్ (Git Deployment)
-
-హోస్టింగర్ hPanel లో గిట్‌ను కనెక్ట్ చేయడం ద్వారా మీరు గిట్‌హబ్‌కు పుష్ చేసిన వెంటనే లైవ్ సర్వర్ ఆటోమేటిక్‌గా అప్‌డేట్ అవుతుంది.
-
-### Step 4.1: టెస్టింగ్ / స్టేజింగ్ (develop బ్రాంచ్)
-1. hPanel లో **Advanced** -> **Git** విభాగంలోకి వెళ్లండి.
-2. **Repository URL**: `https://github.com/<YOUR_USERNAME>/telugu-pdf-app.git`
-3. **Branch**: `develop`
-4. **Install Path**: 
-   - సబ్‌డొమైన్ కొరకు అయితే: `/public_html/dev`
-   - ప్రధాన డొమైన్ కొరకు అయితే: `/public_html`
-5. **Create** బటన్ క్లిక్ చేయండి.
-6. అక్కడ ఇచ్చే **Webhook URL** ను కాపీ చేసుకోండి.
-7. మీ GitHub రిపోజిటరీ -> **Settings** -> **Webhooks** -> **Add webhook** లో ఆ URL ను పేస్ట్ చేయండి (Content type: `application/json`).
-8. ఇప్పుడు మీరు `develop` కు పుష్ చేసిన ప్రతిసారీ హోస్టింగర్ వెంటనే కోడ్‌ను లైవ్ చేస్తుంది.
-
-### Step 4.2: ప్రొడక్షన్ లైవ్ (prod బ్రాంచ్)
-1. మీరు `develop` బ్రాంచ్‌లో అన్ని పరిశీలించిన తరువాత, మార్పులను `prod` లోకి కలపండి:
-   ```bash
-   git checkout prod
-   git merge develop
-   git push origin prod
-   ```
-2. మీ ప్రధాన డొమైన్ గిట్ బ్రాంచ్‌ను `prod` కు అనుసంధానించండి.
+### ❌ హోస్టింగర్‌కు సంబంధం లేనివి (ఇవి సర్వర్‌లో రన్ కావు):
+- `mobile/`: ఇది మొబైల్ ఫోన్ (Android/iOS) కొరకు React Native యాప్. దీనిని మీ కంప్యూటర్‌లో APK లేదా EAS Build ద్వారా బిల్డ్ చేసి ఫోన్‌లలో వాడతారు. హోస్టింగర్ కేవలం బ్యాకెండ్ API మరియు వెబ్ అడ్మిన్‌ను మాత్రమే నడుపుతుంది.
+- `node_modules/`: హోస్టింగర్‌లో నోడ్ ప్రాసెస్‌లు ఏవీ నడవవు కాబట్టి సర్వర్‌లో Node.js లేదా node_modules అవసరం లేదు.
 
 ---
 
-## 5. కాన్ఫిగరేషన్ ఫైల్ (`config.php`) సవరణ
+## 3. హోస్టింగర్‌లో 2 డేటాబేస్‌ల సృష్టి (MySQL)
 
-హోస్టింగర్ ఫైల్ మేనేజర్‌లో `backend/config/config.php` ఫైల్‌ను తెరిచి మీ డేటాబేస్ వివరాలను ఇవ్వండి:
+హోస్టింగర్ hPanel లో 2 డేటాబేస్‌లను సృష్టించండి:
+1. **Develop Database**: ఉదా: `u123456789_dev_db`
+2. **Production Database**: ఉదా: `u123456789_prod_db`
+
+### రెండింటినీ ఒక్క క్లిక్‌తో ఇన్‌స్టాల్ చేయడం:
+మేము రూపొందించిన [`backend/database/single_database_install.sql`](file:///d:/Clickzen/PDF%20Application/backend/database/single_database_install.sql) ఫైల్ ద్వారా 6 టేబుళ్లు, 3 విభాగాలు, 15 అధ్యాయాలు, 59 అనువాకాలు మరియు డిఫాల్ట్ అడ్మిన్ ఒక్కసారే ఇన్‌స్టాల్ అవుతాయి:
+1. phpMyAdmin లోకి వెళ్లి `u123456789_dev_db` ను ఎంచుకోండి -> **Import** -> `single_database_install.sql` ను అప్‌లోడ్ చేసి **Go** క్లిక్ చేయండి.
+2. మరలా phpMyAdmin లో `u123456789_prod_db` ను ఎంచుకోండి -> **Import** -> అదే `single_database_install.sql` ను అప్‌లోడ్ చేసి **Go** క్లిక్ చేయండి.
+
+> **డిఫాల్ట్ అడ్మిన్ లాగిన్:** `admin@vedicknowledge.org` / `admin123`
+
+---
+
+## 4. స్మార్ట్ `config.php` - డొమైన్ బట్టి డేటాబేస్ ఆటో-సెలెక్ట్
+
+[`backend/config/config.php`](file:///d:/Clickzen/PDF%20Application/backend/config/config.php) లో మేము స్మార్ట్ డిటెక్షన్ రాశాము. డొమైన్ పేరులో `dev.` ఉంటే ఆటోమేటిక్‌గా `dev_db` కి కనెక్ట్ అవుతుంది, లేకుంటే `prod_db` కి కనెక్ట్ అవుతుంది!
+
+హోస్టింగర్‌లో మీ డేటాబేస్ యూజర్‌నేమ్, పాస్‌వర్డ్‌లను `backend/config/config.php` లో ఒకసారి ఎంటర్ చేయండి:
 
 ```php
-<?php
-return [
+// 1. DEVELOP DATABASE
+$devEnvironment = [
     'db' => [
         'driver'   => 'mysql',
         'host'     => 'localhost',
         'port'     => 3306,
-        'database' => 'u123456789_telugu',     // మీ హోస్టింగర్ DB పేరు
-        'username' => 'u123456789_admin',      // మీ హోస్టింగర్ DB యూజర్‌నేమ్
-        'password' => 'మీ_డేటాబేస్_పాస్‌వర్డ్',  // మీ పాస్‌వర్డ్
+        'database' => 'u123456789_dev_db',
+        'username' => 'u123456789_dev_user',
+        'password' => 'మీ_DEV_డేటాబేస్_పాస్‌వర్డ్',
     ],
     'app' => [
-        'name'       => 'సాంప్రదాయిక జ్ఞాన తరంగిణి',
-        'url'        => 'https://yourdomain.com', // మీ డొమైన్ URL
-        'jwt_secret' => 'telugu_traditional_sacred_knowledge_jwt_key_2026',
+        'url' => 'https://dev.yourdomain.com',
+    ]
+];
+
+// 2. PRODUCTION DATABASE
+$prodEnvironment = [
+    'db' => [
+        'driver'   => 'mysql',
+        'host'     => 'localhost',
+        'port'     => 3306,
+        'database' => 'u123456789_prod_db',
+        'username' => 'u123456789_prod_user',
+        'password' => 'మీ_PROD_డేటాబేస్_పాస్‌వర్డ్',
+    ],
+    'app' => [
+        'url' => 'https://yourdomain.com',
     ]
 ];
 ```
 
 ---
 
-## 6. ఫైల్ పర్మిషన్లు (File Permissions)
+## 5. హోస్టింగర్ గిట్ కనెక్షన్ (Git Deployment)
 
-PDFలు మరియు చిత్రాల అప్‌లోడ్ సరిగ్గా పనిచేయుటకు హోస్టింగర్ ఫైల్ మేనేజర్‌లో:
-- `backend/storage/` -> Permissions: `755` లేదా `775`
-- `backend/storage/pdfs/` -> Permissions: `755` లేదా `775`
-- `backend/storage/uploads/` -> Permissions: `755` లేదా `775`
+1. **Develop సైట్ కొరకు:**
+   - hPanel లో `dev.yourdomain.com` సైట్ మేనేజ్‌మెంట్‌లోకి వెళ్లండి.
+   - **Advanced** -> **Git** క్లిక్ చేయండి.
+   - **Repository**: `https://github.com/<YOUR_USER>/<REPO>.git`
+   - **Branch**: `develop`
+   - **Create** క్లిక్ చేయండి.
+   - వెబ్‌హుక్ URL ను కాపీ చేసి GitHub Settings -> Webhooks లో వేయండి.
+
+2. **Production సైట్ కొరకు:**
+   - hPanel లో `yourdomain.com` ప్రధాన సైట్‌లోకి వెళ్లండి.
+   - **Advanced** -> **Git** క్లిక్ చేయండి.
+   - **Repository**: `https://github.com/<YOUR_USER>/<REPO>.git`
+   - **Branch**: `prod`
+   - **Create** క్లిక్ చేయండి.
+   - వెబ్‌హుక్ URL ను కాపీ చేసి GitHub Settings -> Webhooks లో వేయండి.
 
 ---
 
-## 7. యాక్సెస్ యు.ఆర్.ఎల్ (URLs)
+## 6. కమాండ్ ప్రాంప్ట్ ద్వారా Develop నుండి Prod కు పుష్ చేయడం (Push from Develop to Prod)
 
-డిప్లాయ్‌మెంట్ పూర్తయిన తర్వాత:
-- **అడ్మిన్ డాష్‌బోర్డ్**: `https://yourdomain.com/admin/`
-- **బ్యాకెండ్ API**: `https://yourdomain.com/api/categories`
-- **డైరెక్ట్ PDF వ్యూయర్**: `https://yourdomain.com/api/documents/1/view`
+మీరు రోజువారీ మార్పులన్నీ `develop` లో చేస్తారు. ఆ మార్పులను ప్రొడక్షన్‌కు పంపడానికి 2 సులభమైన పద్ధతులు ఉన్నాయి:
+
+### పద్ధతి 1: ఒక్క క్లిక్‌తో (Recommended Script)
+మేము మీ ప్రాజెక్ట్ రూట్‌లో [`push_to_prod.bat`](file:///d:/Clickzen/PDF%20Application/push_to_prod.bat) తయారు చేసాము.
+- కమాండ్ ప్రాంప్ట్‌లో క్రింది కమాండ్ ఇవ్వండి లేదా ఫైల్‌పై డబుల్ క్లిక్ చేయండి:
+```cmd
+push_to_prod.bat
+```
+ఇది ఆటోమేటిక్‌గా:
+1. `develop` లోని మార్పులను కమిట్ చేసి GitHub `develop` కు పంపుతుంది (హోస్టింగర్ Dev లైవ్ అవుతుంది).
+2. `prod` బ్రాంచ్‌లోకి వెళ్లి `develop` ను మెర్జ్ చేస్తుంది.
+3. GitHub `prod` కు పుష్ చేస్తుంది (హోస్టింగర్ Prod లైవ్ అవుతుంది).
+4. తిరిగి `develop` బ్రాంచ్‌కు వచ్చేస్తుంది.
 
 ---
 
-## 8. మొబైల్ యాప్‌లో లైవ్ హోస్టింగర్ డొమైన్ కనెక్ట్ చేయడం
+### పద్ధతి 2: కమాండ్ ప్రాంప్ట్ మాన్యువల్ కమాండ్స్ (Manual Git Commands)
 
-మొబైల్ యాప్‌ను ప్రొడక్షన్ హోస్టింగర్ సర్వర్‌కు కనెక్ట్ చేయడానికి `mobile/src/services/api.ts` లోని `getBaseUrl` ఫంక్షన్‌లో మీ ప్రొడక్షన్ డొమైన్‌ను నమోదు చేయండి:
+మీరు నేరుగా కమాండ్స్ టైప్ చేయాలనుకుంటే Command Prompt లో ఈ 4 కమాండ్స్ ఇవ్వండి:
 
-```typescript
-// mobile/src/services/api.ts
-export const getBaseUrl = (): string => {
-  // ప్రొడక్షన్ హోస్టింగర్ API
-  return 'https://yourdomain.com/api';
-};
+```cmd
+:: 1. Develop లో మార్పులను పుష్ చేయండి
+git checkout develop
+git add .
+git commit -m "Updated features on develop"
+git push origin develop
+
+:: 2. Prod లోకి మారి Develop ను కలపండి
+git checkout prod
+git merge develop
+git push origin prod
+
+:: 3. తిరిగి Develop బ్రాంచ్‌కు రండి
+git checkout develop
 ```
 
-ఇప్పుడు EAS Build ద్వారా లేదా APK బిల్డ్ ద్వారా మీ మొబైల్ యాప్ నేరుగా హోస్టింగర్ లైవ్ సర్వర్ నుండే డేటాను మరియు PDFలను అత్యంత వేగంగా పొందుతుంది.
+---
+
+## 7. ఫైల్ పర్మిషన్లు (File Permissions on Hostinger)
+హోస్టింగర్ ఫైల్ మేనేజర్‌లో:
+- `backend/storage/` -> `755` లేదా `775`
+- `backend/storage/pdfs/` -> `755` లేదా `775`
+- `backend/storage/uploads/` -> `755` లేదా `775`
+
+---
+
+## 8. ఫలితం (Verification)
+- **Develop వెబ్ అడ్మిన్**: `https://dev.yourdomain.com/admin/` (Develop డేటాబేస్‌తో అనుసంధానం)
+- **Prod వెబ్ అడ్మిన్**: `https://yourdomain.com/admin/` (Production డేటాబేస్‌తో అనుసంధానం)
+- **డైరెక్ట్ PDF వీక్షణి**: `https://yourdomain.com/api/documents/1/view`
+- **పూర్తిగా Node.js రహితం**: 100% PHP & Apache Static Hosting.

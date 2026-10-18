@@ -11,8 +11,11 @@ class Database {
             return self::$instance;
         }
 
+        $localConfigFile = __DIR__ . '/config.local.php';
         $configFile = __DIR__ . '/config.php';
-        $config = file_exists($configFile) ? (require $configFile) : [];
+        $config = file_exists($localConfigFile)
+            ? (require $localConfigFile)
+            : (file_exists($configFile) ? (require $configFile) : []);
 
         $driver = $config['db']['driver'] ?? (getenv('DB_CONNECTION') ?: 'sqlite');
         $dbHost = $config['db']['host'] ?? (getenv('DB_HOST') ?: '127.0.0.1');
