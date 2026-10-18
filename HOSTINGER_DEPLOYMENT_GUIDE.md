@@ -98,7 +98,7 @@ $prodEnvironment = [
 1. **Develop సైట్ కొరకు:**
    - hPanel లో `dev.yourdomain.com` సైట్ మేనేజ్‌మెంట్‌లోకి వెళ్లండి.
    - **Advanced** -> **Git** క్లిక్ చేయండి.
-   - **Repository**: `https://github.com/<YOUR_USER>/<REPO>.git`
+   - **Repository**: `https://github.com/vamsi0804/pdf.git`
    - **Branch**: `develop`
    - **Create** క్లిక్ చేయండి.
    - వెబ్‌హుక్ URL ను కాపీ చేసి GitHub Settings -> Webhooks లో వేయండి.
@@ -106,7 +106,7 @@ $prodEnvironment = [
 2. **Production సైట్ కొరకు:**
    - hPanel లో `yourdomain.com` ప్రధాన సైట్‌లోకి వెళ్లండి.
    - **Advanced** -> **Git** క్లిక్ చేయండి.
-   - **Repository**: `https://github.com/<YOUR_USER>/<REPO>.git`
+   - **Repository**: `https://github.com/vamsi0804/pdf.git`
    - **Branch**: `prod`
    - **Create** క్లిక్ చేయండి.
    - వెబ్‌హుక్ URL ను కాపీ చేసి GitHub Settings -> Webhooks లో వేయండి.
