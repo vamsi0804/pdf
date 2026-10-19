@@ -93,23 +93,36 @@ $prodEnvironment = [
 
 ---
 
-## 5. హోస్టింగర్ గిట్ కనెక్షన్ (Git Deployment)
+## 5. ఆటోమేటిక్ డిప్లాయ్‌మెంట్ (Automated Deployment via GitHub Actions & FTP)
 
-1. **Develop సైట్ కొరకు:**
-   - hPanel లో `dev.yourdomain.com` సైట్ మేనేజ్‌మెంట్‌లోకి వెళ్లండి.
-   - **Advanced** -> **Git** క్లిక్ చేయండి.
-   - **Repository**: `https://github.com/vamsi0804/pdf.git`
-   - **Branch**: `develop`
-   - **Create** క్లిక్ చేయండి.
-   - వెబ్‌హుక్ URL ను కాపీ చేసి GitHub Settings -> Webhooks లో వేయండి.
+హోస్టింగర్ లోని Git టూల్ లో వచ్చే SSH లేదా Auth సమస్యలను నివారించడానికి, **GitHub Actions + FTP** విధానం ద్వారా ఆటో-డిప్లాయ్‌మెంట్ సిద్ధం చేయబడింది. మీరు కమాండ్ ప్రాంప్ట్ నుండి పుష్ చేసిన వెంటనే GitHub Actions మీ ఫైల్స్‌ను హోస్టింగర్‌కు ఆటోమేటిక్‌గా అప్‌లోడ్ చేస్తుంది.
 
-2. **Production సైట్ కొరకు:**
-   - hPanel లో `yourdomain.com` ప్రధాన సైట్‌లోకి వెళ్లండి.
-   - **Advanced** -> **Git** క్లిక్ చేయండి.
-   - **Repository**: `https://github.com/vamsi0804/pdf.git`
-   - **Branch**: `prod`
-   - **Create** క్లిక్ చేయండి.
-   - వెబ్‌హుక్ URL ను కాపీ చేసి GitHub Settings -> Webhooks లో వేయండి.
+### దశ 1: హోస్టింగర్ FTP వివరాలు చూసుకోవడం (Get Hostinger FTP Details)
+1. హోస్టింగర్ hPanel లో **Files** -> **FTP Accounts** కి వెళ్ళండి.
+2. అక్కడ కనిపించే వివరాలను గమనించండి:
+   - **FTP IP / Host**: ఉదా. `access.hostinger.com` లేదా మీ సర్వర్ IP / డొమైన్
+   - **FTP Username**: ఉదా. `u123456789`
+   - **FTP Password**: మీ FTP పాస్‌వర్డ్ (మార్చుకోవచ్చు)
+
+### దశ 2: GitHub Repository లో Secrets జోడించడం (One-time Setup)
+1. మీ GitHub రెపోలోకి వెళ్లండి: [https://github.com/vamsi0804/pdf/settings/secrets/actions](https://github.com/vamsi0804/pdf/settings/secrets/actions)
+2. **New repository secret** క్లిక్ చేసి క్రింది 3 సీక్రెట్లను జోడించండి:
+   - `FTP_SERVER`: మీ హోస్టింగర్ FTP హోస్ట్ (ఉదా: `access.hostinger.com` లేదా మీ సర్వర్ IP)
+   - `FTP_USERNAME`: మీ FTP యూజర్‌నేమ్
+   - `FTP_PASSWORD`: మీ FTP పాస్‌వర్డ్
+   - *(Optional)* `FTP_DEV_DIR`: Develop ఫోల్డర్ పాత్ (డిఫాల్ట్: `public_html/dev/`)
+   - *(Optional)* `FTP_PROD_DIR`: Prod ఫోల్డర్ పాత్ (డిఫాల్ట్: `public_html/`)
+
+ఇకపై మీరు `push_to_dev.bat` లేదా `push_to_prod.bat` రన్ చేసిన ప్రతిసారీ GitHub Actions ఆటోమేటిక్‌గా ఫైళ్లను హోస్టింగర్‌కు అప్‌లోడ్ చేస్తుంది!
+
+---
+
+### ప్రత్యామ్నాయం: నేరుగా కమాండ్ ప్రాంప్ట్ నుండి అప్‌లోడ్ చేయడం (Direct FTP Upload)
+GitHub Actions వాడకుండా, మీ ల్యాప్‌టాప్ కమాండ్ ప్రాంప్ట్ నుండే హోస్టింగర్‌కు డైరెక్ట్‌గా అప్‌లోడ్ చేయాలనుకుంటే:
+1. ప్రాజెక్ట్ రూట్ లోని [`deploy_direct_ftp.bat`](file:///d:/Clickzen/PDF%20Application/deploy_direct_ftp.bat) పై డబుల్ క్లిక్ చేయండి.
+2. `1` (Develop) లేదా `2` (Production) ఎంచుకోండి.
+3. ఇది నేరుగా హోస్టింగర్‌కు ఫైళ్లను అప్‌లోడ్ చేస్తుంది!
+
 
 ---
 

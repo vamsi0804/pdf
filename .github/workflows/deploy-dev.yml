@@ -1,0 +1,44 @@
+name: Deploy Develop to Hostinger
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  deploy-develop:
+    name: Auto Deploy to Develop (Staging)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set Server Target Directory
+        id: set_dir
+        run: |
+          DEV_DIR="${{ secrets.FTP_DEV_DIR }}"
+          if [ -z "$DEV_DIR" ]; then
+            DEV_DIR="public_html/dev/"
+          fi
+          echo "server_dir=$DEV_DIR" >> $GITHUB_OUTPUT
+
+      - name: Sync Files to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ steps.set_dir.outputs.server_dir }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            mobile/**
+            admin/**
+            **/node_modules/**
+            **/*.bat
+            **/*.md
+            hostinger_deploy.zip

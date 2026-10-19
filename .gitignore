@@ -38,3 +38,9 @@ Thumbs.db
 
 # Temporary database files
 *.sqlite-journal
+
+# Deployment Secrets & Archives
+tools/ftp_config.json
+*.zip
+hostinger_package/
+

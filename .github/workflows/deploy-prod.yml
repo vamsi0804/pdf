@@ -1,0 +1,44 @@
+name: Deploy Production to Hostinger
+
+on:
+  push:
+    branches:
+      - prod
+  workflow_dispatch:
+
+jobs:
+  deploy-production:
+    name: Auto Deploy to Production (Live)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set Server Target Directory
+        id: set_dir
+        run: |
+          PROD_DIR="${{ secrets.FTP_PROD_DIR }}"
+          if [ -z "$PROD_DIR" ]; then
+            PROD_DIR="public_html/"
+          fi
+          echo "server_dir=$PROD_DIR" >> $GITHUB_OUTPUT
+
+      - name: Sync Files to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ steps.set_dir.outputs.server_dir }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            mobile/**
+            admin/**
+            **/node_modules/**
+            **/*.bat
+            **/*.md
+            hostinger_deploy.zip

@@ -1,0 +1,7 @@
+{
+  "FTP_SERVER": "access.hostinger.com",
+  "FTP_USERNAME": "u123456789",
+  "FTP_PASSWORD": "YourHostingerFtpPassword",
+  "FTP_DEV_DIR": "public_html/dev",
+  "FTP_PROD_DIR": "public_html"
+}

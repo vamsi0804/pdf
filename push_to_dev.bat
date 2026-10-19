@@ -22,7 +22,9 @@ git push origin develop
 
 echo.
 echo ========================================================
-echo   SUCCESS! Pushed to DEVELOP! (Hostinger Staging Live)
+echo   SUCCESS! Pushed to DEVELOP!
+echo   GitHub Action is now auto-deploying to Hostinger Develop!
+echo   Track deployment at: https://github.com/vamsi0804/pdf/actions
 echo ========================================================
 echo.
 pause

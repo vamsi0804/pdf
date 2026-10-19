@@ -63,7 +63,8 @@ git checkout develop
 echo.
 echo ========================================================
 echo   SUCCESS! Pushed from DEVELOP to PROD!
-echo   Hostinger develop & prod domains will auto-deploy!
+echo   GitHub Action is now auto-deploying to Hostinger Production!
+echo   Track deployment at: https://github.com/vamsi0804/pdf/actions
 echo ========================================================
 echo.
 pause
